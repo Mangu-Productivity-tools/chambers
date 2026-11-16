@@ -14,7 +14,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Resume and cover letter studio. Letter-width paper, instant ATS match, tailor from your facts.",
+          "Resume and cover letter studio in beta. Letter-width paper, ATS readiness check, tailor from your facts. Your resume stays on this device.",
       },
     ],
     links: [

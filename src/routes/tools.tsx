@@ -36,8 +36,10 @@ function ToolsPage() {
           Instant checks. Honest rewrites.
         </h1>
         <p className="mt-4 max-w-2xl text-body text-soft">
-          ATS scoring is local and free. Rewrites use the assistant when it is available, and never
-          invent a new employer.
+          The ATS readiness check runs on this device.{" "}
+          {ASSIST_ENABLED
+            ? "Rewrites use the assistant when it is available, and never invent a new employer."
+            : "Rewrites are local in this beta — AI assist is off — and never invent a new employer."}
         </p>
         <div className="mt-12 grid gap-6 lg:grid-cols-2">
           <AtsCard />

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/input";
 import { raceAi } from "@/lib/ai/timeout";
 import { ASSIST_ENABLED } from "@/lib/ai/assist-flag";
+import { PRIVACY_LINE } from "@/lib/site/beta";
 import { parseResumeAi } from "@/lib/ai/resume-ai";
 import { ingestResumeInput } from "@/lib/resume/ingest";
 import { emptyResume, sampleEngineerResume, sampleResume } from "@/lib/resume/sample";
@@ -139,7 +140,7 @@ function StartPage() {
             </h1>
             <div className="mt-10 flex w-full flex-col gap-3">
               <Button size="lg" className="w-full" onClick={() => setStep(1)}>
-                Yes — paste or upload
+                Yes — paste or choose a file
               </Button>
               <Button size="lg" variant="ghost" className="w-full" onClick={startBlank}>
                 Start with a blank sheet
@@ -215,7 +216,7 @@ function StartPage() {
 
         <p className="mt-10 flex items-center gap-2 text-caption text-soft">
           <Lock className="size-3.5" />
-          Private by default. Stored in this browser, not on a server.
+          {PRIVACY_LINE}
         </p>
       </main>
     </div>

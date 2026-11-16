@@ -12,6 +12,7 @@ import { looksLikeEmail } from "@/lib/resume/quality";
 import { scoreAts } from "@/lib/resume/ats";
 import { toJsonResume } from "@/lib/resume/json-io";
 import { useResumeStore } from "@/lib/resume/store";
+import { FEEDBACK_URL } from "@/lib/site/feedback";
 
 export const Route = createFileRoute("/export")({
   component: ExportPage,
@@ -38,6 +39,21 @@ function ExportPage() {
           <LetterExport />
         </div>
         <PackExport />
+        <p className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-caption text-soft">
+          <span>Something off in the export?</span>
+          <a
+            href={FEEDBACK_URL}
+            className="font-medium text-ink underline decoration-hair-strong underline-offset-4 transition-[color] duration-150 ease-out hover:text-ember"
+          >
+            Send feedback
+          </a>
+          <Link to="/settings" className="transition-[color] duration-150 ease-out hover:text-ink">
+            Settings
+          </Link>
+          <Link to="/privacy" className="transition-[color] duration-150 ease-out hover:text-ink">
+            Privacy
+          </Link>
+        </p>
       </main>
     </div>
   );
