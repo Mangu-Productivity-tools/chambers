@@ -1,8 +1,8 @@
 import type { Resume, TailorNotes } from "./types";
 import { cloneResume } from "./normalize";
 import { tokenize, uniqueKeywords } from "./text";
+import { honestOpener, WEAK_OPENER } from "./honest-opener";
 
-const WEAK = /^(responsible for|worked on|helped with|helped|assisted with|assisted in|tasked with)\s+/i;
 
 export function tailorLocal(
   resume: Resume,
@@ -27,7 +27,7 @@ export function tailorLocal(
     return sb - sa;
   });
   if (rankedJobs[0] && rankedJobs[0].id !== next.experience[0]?.id) {
-    moved.push(`Led with ${rankedJobs[0].role} at ${rankedJobs[0].org} — closest to this posting.`);
+    moved.push(`Opened with ${rankedJobs[0].role} at ${rankedJobs[0].org} — closest to this posting.`);
   }
   for (const job of rankedJobs) {
     const original = job.bullets.slice();
@@ -36,8 +36,8 @@ export function tailorLocal(
       moved.push(`Raised a matching bullet under ${job.role}.`);
     }
     job.bullets = job.bullets.map((b) => {
-      if (!WEAK.test(b)) return b;
-      const nextBullet = b.replace(WEAK, "Led ");
+      if (!WEAK_OPENER.test(b)) return b;
+      const nextBullet = honestOpener(b);
       if (nextBullet !== b) rewrote.push(`Tightened a weak opener under ${job.role}.`);
       return nextBullet;
     });

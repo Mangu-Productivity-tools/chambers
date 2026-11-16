@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { useHydrated } from "@/hooks/use-hydrated";
 import { raceAi } from "@/lib/ai/timeout";
+import { ASSIST_ENABLED } from "@/lib/ai/assist-flag";
 import { writeCoverLetterAi } from "@/lib/ai/resume-ai";
 import { wordCount } from "@/lib/resume/quality";
 import { LETTER_TONES, type LetterTone } from "@/lib/resume/types";
@@ -72,7 +73,7 @@ function LetterForm() {
     );
     setLetter(local);
     setBusy("refine");
-    const ai = await raceAi(
+    const ai = !ASSIST_ENABLED ? null : await raceAi(
       writeCoverLetterAi({
         data: {
           resume,

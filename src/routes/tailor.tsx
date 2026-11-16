@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { useHydrated } from "@/hooks/use-hydrated";
 import { raceAi } from "@/lib/ai/timeout";
+import { ASSIST_ENABLED } from "@/lib/ai/assist-flag";
 import { tailorResumeAi, writeCoverLetterAi } from "@/lib/ai/resume-ai";
 import { writeLetterLocal } from "@/lib/resume/letter-local";
 import {
@@ -110,10 +111,9 @@ function TailorForm({ onTailored }: { onTailored: () => void }) {
     setNotes(local.notes);
     onTailored();
     setBusy("refine");
-    const ai = await raceAi(
-      tailorResumeAi({ data: { resume, jobDescription } }),
-      12000,
-    );
+    const ai = ASSIST_ENABLED
+      ? await raceAi(tailorResumeAi({ data: { resume, jobDescription } }), 12000)
+      : null;
     if (ai?.ok) {
       setResume(ai.resume);
       setNotes(ai.notes);
@@ -132,7 +132,7 @@ function TailorForm({ onTailored }: { onTailored: () => void }) {
     const local = writeLetterLocal(resume, jobDescription, targetCompany, targetRole, letterTone);
     setLetter(local);
     setBusy("letter");
-    const ai = await raceAi(
+    const ai = !ASSIST_ENABLED ? null : await raceAi(
       writeCoverLetterAi({
         data: {
           resume,

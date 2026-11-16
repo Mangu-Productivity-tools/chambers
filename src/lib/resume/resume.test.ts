@@ -15,6 +15,8 @@ import { bulletHint, hintLine, looksLikeEmail, stripProtocol, wordCount } from "
 import { emptyResume, SAMPLE_JD_EDITORIAL, sampleResume } from "./sample.ts";
 import { tailorLocal } from "./tailor-local.ts";
 import { tidyResume } from "./tidy.ts";
+import { honestOpener, pastTense } from "./honest-opener.ts";
+import { localVariants } from "./bullet-local.ts";
 import { crc32, zipStore } from "./zip.ts";
 
 describe("parseResumeText", () => {
@@ -224,11 +226,13 @@ describe("tailorLocal", () => {
     assert.ok(typeof notes.summary === "string");
   });
 
-  it("tightens weak openers", () => {
+  it("tightens weak openers honestly (HF-1: never inserts Led)", () => {
     const src = sampleResume();
     src.experience[0].bullets[0] = "Responsible for shipping the storefront.";
     const { resume, notes } = tailorLocal(src, SAMPLE_JD_EDITORIAL);
-    assert.match(resume.experience[0].bullets.join(" "), /^Led |Led /);
+    const all = resume.experience.flatMap((j) => j.bullets);
+    assert.ok(all.includes("Shipped the storefront."));
+    assert.ok(!all.some((b) => b.startsWith("Led the storefront") || b === "Led shipping the storefront."));
     assert.ok(notes.rewrote.length >= 1);
   });
 });
@@ -370,5 +374,54 @@ describe("highlight + diff", () => {
     b.experience[0].bullets = [b.experience[0].bullets[1], first, ...b.experience[0].bullets.slice(2)];
     const d = diffResumes(a, b);
     assert.ok(d.bullets.some((x) => x.kind === "raised"));
+  });
+});
+
+describe("honestOpener (HF-1 launch hotfix)", () => {
+  const cases: [string, string][] = [
+    ["Responsible for cleaning patient-intake data in Excel and SQL", "Cleaned patient-intake data in Excel and SQL"],
+    ["Worked on resolving 30+ tickets per week", "Resolved 30+ tickets per week"],
+    ["Responsible for debugging the parser", "Debugged the parser"],
+    ["Responsible for managing a team of 4", "Managed a team of 4"],
+    ["Tasked with building the onboarding flow", "Built the onboarding flow"],
+    ["Worked on studying churn drivers", "Studied churn drivers"],
+    ["Responsible for creating weekly dashboards", "Created weekly dashboards"],
+    ["Responsible for leading standups", "Led standups"],
+    ["Helped with onboarding new analysts", "Supported onboarding new analysts"],
+    ["Assisted with month-end close", "Supported month-end close"],
+    ["Assisted in data migration", "Supported data migration"],
+    ["Responsible for the quarterly budget", "Responsible for the quarterly budget"],
+    ["Worked on the website redesign", "Worked on the website redesign"],
+    ["Built a CI pipeline", "Built a CI pipeline"],
+    ["Responsible for playing back test sessions", "Played back test sessions"],
+    ["Worked on writing release notes", "Wrote release notes"],
+    ["In charge of scheduling 12 volunteers", "Scheduled 12 volunteers"],
+    ["Responsible for shipping weekly", "Shipped weekly"],
+    ["Worked on running A/B tests", "Ran A/B tests"],
+    ["Tasked with reviewing vendor contracts", "Reviewed vendor contracts"],
+  ];
+  for (const [input, expected] of cases) {
+    it(`${input} -> ${expected}`, () => assert.equal(honestOpener(input), expected));
+  }
+  it("never introduces leadership or delivery verbs absent from the input", () => {
+    for (const [input] of cases) {
+      const out = honestOpener(input);
+      if (!/lead/i.test(input)) assert.ok(!/^Led\b/.test(out), out);
+      assert.ok(!/^Delivered\b/.test(out), out);
+    }
+  });
+  it("pastTense handles regular, silent-e, y and doubled stems", () => {
+    assert.equal(pastTense("cleaning"), "cleaned");
+    assert.equal(pastTense("resolving"), "resolved");
+    assert.equal(pastTense("studying"), "studied");
+    assert.equal(pastTense("shipping"), "shipped");
+  });
+  it("tools variants keep numbers and never say Led/Delivered", () => {
+    const v = localVariants("Worked on resolving 30+ tickets per week");
+    assert.ok(v.length >= 1);
+    for (const x of v) {
+      assert.ok(!/\b(Led|Delivered)\b/.test(x), x);
+      assert.ok(x.includes("30+"), x);
+    }
   });
 });

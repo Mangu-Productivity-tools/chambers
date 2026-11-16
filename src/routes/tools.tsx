@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Field, Textarea } from "@/components/ui/input";
 import { useHydrated } from "@/hooks/use-hydrated";
 import { raceAi } from "@/lib/ai/timeout";
+import { ASSIST_ENABLED } from "@/lib/ai/assist-flag";
 import { rewriteBulletAi, writeSummaryAi } from "@/lib/ai/resume-ai";
 import { scoreAts, reportAsText } from "@/lib/resume/ats";
 import { localVariants } from "@/lib/resume/bullet-local";
@@ -109,7 +110,7 @@ function BulletCard() {
     setBusy(true);
     const fallback = localVariants(bullet);
     setVariants(fallback);
-    const ai = await raceAi(
+    const ai = !ASSIST_ENABLED ? null : await raceAi(
       rewriteBulletAi({
         data: {
           bullet,
@@ -194,7 +195,7 @@ function SummaryCard() {
     setBusy(true);
     const local = writeSummaryLocal(resume, jobDescription);
     patchResume({ summary: local });
-    const ai = await raceAi(writeSummaryAi({ data: { resume, jobDescription } }), 8000);
+    const ai = ASSIST_ENABLED ? await raceAi(writeSummaryAi({ data: { resume, jobDescription } }), 8000) : null;
     if (ai?.ok) {
       patchResume({ summary: ai.summary });
       toast.success("Summary updated on the sheet");

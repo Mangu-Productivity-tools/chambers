@@ -6,6 +6,7 @@ import { BrandMark } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/input";
 import { raceAi } from "@/lib/ai/timeout";
+import { ASSIST_ENABLED } from "@/lib/ai/assist-flag";
 import { parseResumeAi } from "@/lib/ai/resume-ai";
 import { ingestResumeInput } from "@/lib/resume/ingest";
 import { emptyResume, sampleEngineerResume, sampleResume } from "@/lib/resume/sample";
@@ -71,9 +72,9 @@ function StartPage() {
     }
     setResume(result.resume);
     saveMaster();
-    toast.message("On paper. Refining structure…");
+    toast.message(ASSIST_ENABLED ? "On paper. Refining structure…" : "On paper. Stays on this device.");
     void navigate({ to: "/studio" });
-    const ai = await raceAi(parseResumeAi({ data: { text } }), 12000);
+    const ai = ASSIST_ENABLED ? await raceAi(parseResumeAi({ data: { text } }), 12000) : null;
     if (ai?.ok) {
       setResume(ai.resume);
       saveMaster();
