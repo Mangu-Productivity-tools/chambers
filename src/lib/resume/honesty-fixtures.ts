@@ -44,7 +44,7 @@ export function thinInternResume(): Resume {
         location: "Leeds",
         start: "2025",
         end: "2025",
-        bullets: ["Responsible for updating deployment scripts for the build server."],
+        bullets: ["Responsible for updating the deployment scripts for the build server."],
       },
       {
         id: "exp-lab",
@@ -55,7 +55,7 @@ export function thinInternResume(): Resume {
         end: "2024",
         bullets: [
           "Set up 12 lab machines each term.",
-          "Helped with answering student questions about Linux.",
+          "Helped with answering the student questions about Linux.",
         ],
       },
     ],

@@ -268,9 +268,19 @@ function chainProblem(chain: VerbChain, tail: string): OpenerOutcome | null {
   // suggests a title or name, not an object. Acronyms ("AWS") are fine.
   const nextRaw = tail.match(/^\s+([A-Za-z]+)/)?.[1] ?? "";
   if (/^[A-Z][a-z]/.test(nextRaw)) return "ambiguous";
-  // "... (target not met)", "(round failed)": the bullet says the outcome did not
-  // happen, so a bare past-tense verb would overstate it.
-  if (/\b(?:not|never|failed|lost|missed|unsuccessful|attempt(?:ed)?|cancell?ed|target)\b/i.test(tail)) {
+  // The -ing word is only read as a verb when what follows is plainly its object:
+  // a determiner, possessive, number or amount ("managing a team", "training 5 hires").
+  // "marketing emails", "managing partner relations", "building permits" stay as written.
+  if (!/^\s+(?:(?:the|a|an|our|their|its|his|her|my|all|each|every|both|new)\b|\d|\$|\u00a3|\u20ac)/i.test(tail)) {
+    return "ambiguous";
+  }
+  // The bullet qualifies or negates the outcome ("(round failed)", "; hired 2",
+  // "but fell short", "which was shelved"): a bare past-tense verb would overstate it.
+  if (
+    /[;(]|n['\u2019]t\b|\b(?:not|never|no|none|failed|lost|missed|unsuccessful|attempt(?:ed)?|cancell?ed|target|goal|but|although|though|however|which|without|before|until|once|shelved|scrapped|short)\b/i.test(
+      tail,
+    )
+  ) {
     return "ambiguous";
   }
   // A later "... and presenting findings" would be left in the wrong tense, and

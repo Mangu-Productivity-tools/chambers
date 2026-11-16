@@ -389,14 +389,14 @@ describe("highlight + diff", () => {
 
 describe("honestOpener (HF-1 launch hotfix)", () => {
   const cases: [string, string][] = [
-    ["Responsible for cleaning patient-intake data in Excel and SQL", "Cleaned patient-intake data in Excel and SQL"],
+    ["Responsible for cleaning patient-intake data in Excel and SQL", "Responsible for cleaning patient-intake data in Excel and SQL"],
     ["Responsible for resolving 30+ tickets per week", "Resolved 30+ tickets per week"],
     ["Responsible for debugging the parser", "Debugged the parser"],
     ["Responsible for managing a team of 4", "Managed a team of 4"],
     ["Responsible for building the onboarding flow", "Built the onboarding flow"],
-    ["Responsible for studying churn drivers", "Studied churn drivers"],
-    ["Responsible for creating weekly dashboards", "Created weekly dashboards"],
-    ["Responsible for leading standups", "Led standups"],
+    ["Responsible for studying churn drivers", "Responsible for studying churn drivers"],
+    ["Responsible for creating weekly dashboards", "Responsible for creating weekly dashboards"],
+    ["Responsible for leading standups", "Responsible for leading standups"],
     // v26 FR-HON-103: "Supported" was a verb the user never wrote. "Helped" is kept,
     // and openers that are already honest limited-scope verbs are left alone.
     ["Helped with onboarding new analysts", "Helped onboard new analysts"],
@@ -405,12 +405,12 @@ describe("honestOpener (HF-1 launch hotfix)", () => {
     ["Responsible for the quarterly budget", "Responsible for the quarterly budget"],
     ["Worked on the website redesign", "Worked on the website redesign"],
     ["Built a CI pipeline", "Built a CI pipeline"],
-    ["Responsible for playing back test sessions", "Played back test sessions"],
-    ["Responsible for writing release notes", "Wrote release notes"],
+    ["Responsible for playing back test sessions", "Responsible for playing back test sessions"],
+    ["Responsible for writing release notes", "Responsible for writing release notes"],
     ["Responsible for scheduling 12 volunteers", "Scheduled 12 volunteers"],
-    ["Responsible for shipping weekly", "Shipped weekly"],
+    ["Responsible for shipping weekly", "Responsible for shipping weekly"],
     ["Responsible for running A/B tests", "Ran A/B tests"],
-    ["Responsible for reviewing vendor contracts", "Reviewed vendor contracts"],
+    ["Responsible for reviewing vendor contracts", "Responsible for reviewing vendor contracts"],
   ];
   for (const [input, expected] of cases) {
     it(`${input} -> ${expected}`, () => assert.equal(honestOpener(input), expected));
@@ -446,37 +446,37 @@ describe("honestOpener classes (v26 FR-HON-103/104)", () => {
     ["Responsible for reviewing 15 pull requests a week", "Reviewed 15 pull requests a week", "past-tense"],
     // past-tense: silent e
     ["Responsible for managing a team of 4", "Managed a team of 4", "past-tense"],
-    ["Responsible for reducing cloud spend", "Reduced cloud spend", "past-tense"],
-    ["Responsible for analyzing survey data", "Analyzed survey data", "past-tense"],
+    ["Responsible for reducing cloud spend", "Responsible for reducing cloud spend", "ambiguous"],
+    ["Responsible for analyzing survey data", "Responsible for analyzing survey data", "ambiguous"],
     // past-tense: doubled consonant
-    ["Responsible for planning two offsites", "Planned two offsites", "past-tense"],
-    ["Responsible for mapping customer journeys", "Mapped customer journeys", "past-tense"],
+    ["Responsible for planning two offsites", "Responsible for planning two offsites", "ambiguous"],
+    ["Responsible for mapping customer journeys", "Responsible for mapping customer journeys", "ambiguous"],
     ["Responsible for transferring 3 accounts", "Transferred 3 accounts", "past-tense"],
     // past-tense: optional doubling keeps the user's own spelling
-    ["Responsible for cancelling stale orders", "Cancelled stale orders", "past-tense"],
-    ["Responsible for canceling stale orders", "Canceled stale orders", "past-tense"],
+    ["Responsible for cancelling stale orders", "Responsible for cancelling stale orders", "ambiguous"],
+    ["Responsible for canceling stale orders", "Responsible for canceling stale orders", "ambiguous"],
     // past-tense: consonant + y, vowel + y, ie -> y
-    ["Responsible for verifying invoices", "Verified invoices", "past-tense"],
+    ["Responsible for verifying invoices", "Responsible for verifying invoices", "ambiguous"],
     ["Responsible for deploying the API", "Deployed the API", "past-tense"],
-    ["Responsible for tying out ledgers", "Tied out ledgers", "past-tense"],
+    ["Responsible for tying out ledgers", "Responsible for tying out ledgers", "ambiguous"],
     // past-tense: irregular
     ["Responsible for overseeing the night shift", "Oversaw the night shift", "past-tense"],
-    ["Responsible for troubleshooting printer faults", "Troubleshot printer faults", "past-tense"],
-    ["Responsible for teaching maths to year 9", "Taught maths to year 9", "past-tense"],
+    ["Responsible for troubleshooting printer faults", "Responsible for troubleshooting printer faults", "ambiguous"],
+    ["Responsible for teaching maths to year 9", "Responsible for teaching maths to year 9", "ambiguous"],
     ["Responsible for teaching Year 9 maths", "Responsible for teaching Year 9 maths", "ambiguous"],
-    ["Responsible for setting up the till", "Set up the till", "past-tense"],
+    ["Responsible for setting up the till", "Responsible for setting up the till", "ambiguous"],
     ["Responsible for doing the weekly stock count", "Did the weekly stock count", "past-tense"],
     // past-tense: duty openers, lead-ins, colon, lower case, trailing period
-    ["Duties included answering customer emails.", "Answered customer emails.", "past-tense"],
+    ["Duties included answering customer emails.", "Duties included answering customer emails.", "ambiguous"],
     ["Duties included: managing and training 4 interns.", "Managed and trained 4 interns.", "past-tense"],
-    ["Responsibilities included preparing month-end reports", "Prepared month-end reports", "past-tense"],
-    ["My main duties were tracking late shipments", "Tracked late shipments", "past-tense"],
-    ["I was responsible for creating rotas", "Created rotas", "past-tense"],
+    ["Responsibilities included preparing month-end reports", "Responsibilities included preparing month-end reports", "ambiguous"],
+    ["My main duties were tracking late shipments", "My main duties were tracking late shipments", "ambiguous"],
+    ["I was responsible for creating rotas", "I was responsible for creating rotas", "ambiguous"],
     ["responsible for building, testing and shipping the app", "Built, tested and shipped the app", "past-tense"],
     // helped: the limiting verb stays, the user's verb goes to base form
     ["Helped with managing a team of 4", "Helped manage a team of 4", "helped"],
     ["Helped with shipping the v2 release", "Helped ship the v2 release", "helped"],
-    ["Helped with studying churn drivers", "Helped study churn drivers", "helped"],
+    ["Helped with studying churn drivers", "Helped with studying churn drivers", "ambiguous"],
     ["Helped with writing and editing the newsletter", "Helped write and edit the newsletter", "helped"],
     ["Helped in running 3 workshops", "Helped run 3 workshops", "helped"],
     // kept: already an honest verb of limited scope
@@ -697,7 +697,7 @@ describe("tailor notes are neutral and accurate (v26 FR-HON-105)", () => {
       ),
     );
     assert.ok(notes.rewrote.some((n) => n.includes("“Helped with answering” became “Helped answer”")));
-    assert.ok(resume.experience.flatMap((j) => j.bullets).includes("Updated deployment scripts for the build server."));
+    assert.ok(resume.experience.flatMap((j) => j.bullets).includes("Updated the deployment scripts for the build server."));
     assert.match(notes.summary, /rewrote 2 bullet openers using your own verbs|Rewrote 2 bullet openers using your own verbs/);
   });
 
@@ -1040,4 +1040,30 @@ it("openers that describe an assignment are never turned into outcomes (review B
     "Responsible for holding company filings",
   ];
   for (const b of unchanged) assert.equal(honestOpener(b), b);
+});
+
+it("noun-like -ing words and qualified outcomes are left as written (review B1, round 2)", () => {
+  const unchanged = [
+    "Responsible for marketing emails",
+    "Responsible for shipping labels",
+    "Responsible for building permits and inspections",
+    "Responsible for purchasing orders for 3 sites",
+    "Responsible for running water supply checks",
+    "Responsible for operating theatre sanitation",
+    "Responsible for leading zeros cleanup in CSVs",
+    "Responsible for managing partner relations",
+    "Responsible for supporting documents intake",
+    "Responsible for developing countries portfolio",
+    "Responsible for assisting managing partners",
+    "Responsible for hiring 10 engineers; hired 2",
+    "Responsible for increasing sales by 30% but fell short",
+    "Responsible for raising $5M, which didn't happen",
+    "Responsible for delivering the project, which was shelved",
+    "Responsible for launching the app before it was scrapped",
+    "Responsible for closing deals worth $1M (closed none)",
+    "Responsible for reducing churn, without success",
+  ];
+  for (const b of unchanged) assert.equal(honestOpener(b), b);
+  assert.equal(honestOpener("Responsible for managing a team of 4"), "Managed a team of 4");
+  assert.equal(honestOpener("Responsible for training 5 new hires"), "Trained 5 new hires");
 });
