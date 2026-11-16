@@ -242,7 +242,7 @@ export async function runCoreLoop(page: Page, opts: LoopOptions = {}) {
   if (opts.afterInitialLoad) await opts.afterInitialLoad(page);
 
   await test.step("paste the synthetic resume", async () => {
-    await page.getByRole("button", { name: /paste or upload/i }).click();
+    await page.getByRole("button", { name: /paste or (upload|choose a file)/i }).click();
     const box = page.getByPlaceholder(/name, headline, roles, bullets/i);
     await expect(box).toBeVisible();
     await box.fill(RESUME_TEXT);

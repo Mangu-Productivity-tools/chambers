@@ -51,7 +51,7 @@ export default defineConfig({
     : {
         // Production-mode bundle, same as the deploy, minus `db:migrate`
         // (`npm run build` would apply migrations if DATABASE_URL were set).
-        command: "node scripts/with-app-env.mjs vite build && npm run preview",
+        command: "vite build && npm run preview",
         cwd: repoRoot,
         url: `${LOCAL_BASE_URL}/`,
         reuseExistingServer: !isCI,

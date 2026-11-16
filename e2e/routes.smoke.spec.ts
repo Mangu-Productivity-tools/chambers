@@ -20,6 +20,8 @@ const ROUTES: RouteCase[] = [
   { path: "/templates", title: /Chambers/, heading: /.+/ },
   { path: "/tools", title: /Chambers/, heading: /.+/ },
   { path: "/versions", title: /Chambers/, heading: /.+/ },
+  { path: "/settings", title: /Chambers/, heading: /.+/ },
+  { path: "/privacy", title: /Chambers/, heading: /.+/ },
   { path: "/export", title: /^Export · Chambers$/, heading: /take the paper with you/i },
 ];
 
@@ -86,27 +88,6 @@ for (const route of ROUTES) {
     });
   });
 }
-
-test.describe("route /settings", () => {
-  test("renders cleanly", async ({ page }) => {
-    test.fixme(
-      true,
-      "Not implemented: there is no src/routes/settings.tsx on this branch, so /settings falls through to the 404 page.",
-    );
-    await page.goto("/settings");
-    await expect(page.getByText(NOT_FOUND_COPY)).toHaveCount(0);
-    await expect(page.getByRole("main")).toBeVisible();
-  });
-
-  test("falls through to the 404 page until it ships", async ({ page, problems }) => {
-    const response = await page.goto("/settings");
-    await page.waitForLoadState("networkidle");
-    // When /settings ships this test fails on purpose: delete it and un-fixme the one above.
-    await expect(page.getByRole("heading", { level: 1, name: NOT_FOUND_COPY })).toBeVisible();
-    expect(response!.status()).toBeLessThan(500);
-    expect(problems.pageErrors).toEqual([]);
-  });
-});
 
 test.describe("404", () => {
   test("renders its own copy", async ({ page, net, problems, origin }) => {
