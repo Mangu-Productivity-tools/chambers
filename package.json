@@ -17,6 +17,7 @@
     "preview:restart": "node scripts/preview.mjs restart",
     "preview:stop": "node scripts/preview.mjs stop",
     "typecheck": "tsc --noEmit",
+    "check:env": "node scripts/check-vite-env.mjs",
     "test": "node --test 'scripts/**/*.test.mjs' && node --experimental-strip-types --import ./scripts/ts-bare-specifiers.mjs --test src/lib/resume/resume.test.ts",
     "test:resume": "node --experimental-strip-types --import ./scripts/ts-bare-specifiers.mjs --test src/lib/resume/resume.test.ts",
     "lint": "eslint .",
