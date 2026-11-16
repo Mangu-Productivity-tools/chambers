@@ -34,7 +34,7 @@ function TemplatesPage() {
     return t.tone === filter;
   });
 
-  const useIt = (id: TemplateId) => {
+  const chooseTemplate = (id: TemplateId) => {
     setTemplate(id);
     void navigate({ to: "/studio" });
   };
@@ -99,7 +99,7 @@ function TemplatesPage() {
                       ATS {t.ats} · {t.bestFor}
                     </p>
                   </div>
-                  <Button size="sm" onClick={() => useIt(t.id)}>
+                  <Button size="sm" onClick={() => chooseTemplate(t.id)}>
                     Use
                   </Button>
                 </div>
