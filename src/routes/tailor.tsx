@@ -159,8 +159,8 @@ function TailorForm({ onTailored }: { onTailored: () => void }) {
         One posting. One version.
       </h1>
       <p className="mt-2 text-body text-soft">
-        Instant local reorder, then an optional refine. Missing requirements stay listed — never
-        fabricated.
+        {ASSIST_ENABLED ? "Instant local reorder, then an optional refine." : "Instant local reorder."}{" "}
+        Missing requirements stay listed — never fabricated.
       </p>
       <div className="mt-6 flex flex-wrap gap-2">
         <Button
@@ -260,7 +260,7 @@ function TailorForm({ onTailored }: { onTailored: () => void }) {
           </Button>
         ) : null}
       </div>
-      {busy === "refine" ? (
+      {ASSIST_ENABLED && busy === "refine" ? (
         <p className="mt-3 text-caption text-soft">Sheet updated. Checking the assistant…</p>
       ) : null}
       <div className="mt-8 hairline rounded-lg bg-paper p-5">

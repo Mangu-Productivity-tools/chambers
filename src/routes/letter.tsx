@@ -103,7 +103,8 @@ function LetterForm() {
         Same voice as the sheet
       </h1>
       <p className="mt-2 text-body text-soft">
-        Instant local draft, then an optional refine. One page. Grounded in the resume.
+        {ASSIST_ENABLED ? "Instant local draft, then an optional refine." : "Instant local draft."} One
+        page. Grounded in the resume.
       </p>
       <div className="mt-6 flex flex-col gap-3">
         <Field label="Company">
