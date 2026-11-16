@@ -1,0 +1,71 @@
+# Chambers CI: quality gate on every PR and main push, then approval-gated release.
+# Deploys are done by the Vercel Git integration; this pipeline decides whether a commit may ship.
+trigger:
+  branches: { include: [main, 'release/*', 'hotfix/*'] }
+pr:
+  branches: { include: [main] }
+
+pool: { vmImage: ubuntu-latest }
+
+variables:
+  NODE_VERSION: '22.x'
+  VITE_ASSIST_ENABLED: 'false'   # launch posture: AI off until Band C
+  CI: 'true'
+
+stages:
+- stage: Gate
+  displayName: Quality gate
+  jobs:
+  - job: build_test
+    timeoutInMinutes: 20
+    steps:
+    - task: NodeTool@0
+      inputs: { versionSpec: $(NODE_VERSION) }
+    - script: npm ci
+      displayName: Install
+    - script: npm run typecheck
+      displayName: Typecheck
+    - script: npm run lint
+      displayName: Lint (0 errors, FR-DEV-105)
+    - script: npm test
+      displayName: Unit tests, honesty fixtures, guards
+    - script: npm run check:env
+      displayName: No stray VITE_ variables (FR-SEC-107)
+    - script: npm run build
+      displayName: Build
+
+- stage: E2E
+  displayName: End-to-end (Playwright)
+  dependsOn: Gate
+  jobs:
+  - job: e2e
+    timeoutInMinutes: 25
+    steps:
+    - task: NodeTool@0
+      inputs: { versionSpec: $(NODE_VERSION) }
+    - script: npm ci
+      displayName: Install
+    - script: npx playwright install --with-deps chromium
+      displayName: Install browser
+    - script: npm run e2e
+      displayName: Route smoke, privacy invariant, offline loop
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs: { testResultsFormat: JUnit, testResultsFiles: 'e2e/test-results/junit.xml' }
+    - task: PublishPipelineArtifact@1
+      condition: succeededOrFailed()
+      inputs: { targetPath: e2e/playwright-report, artifact: playwright-report }
+
+- stage: Release
+  displayName: Release (approval required)
+  dependsOn: E2E
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - deployment: production
+    environment: production
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo "Approved. Run docs/RELEASE-CHECK.md against the deployment."
+            displayName: Release marker
