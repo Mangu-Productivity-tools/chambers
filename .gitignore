@@ -17,5 +17,4 @@ artifacts
 attachments
 tmp
 .node_modules.lock
-.grok/*
-!.grok/app-env.json
+.preview

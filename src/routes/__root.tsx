@@ -1,6 +1,5 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { Toaster } from "sonner";
-import { AuthProvider } from "@/lib/auth/provider";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "Chambers";
@@ -29,9 +28,7 @@ export const Route = createRootRoute({
         <HeadContent />
       </head>
       <body>
-        <AuthProvider>
-          <Outlet />
-        </AuthProvider>
+        <Outlet />
         <Toaster
           position="bottom-center"
           toastOptions={{
