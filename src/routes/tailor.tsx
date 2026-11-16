@@ -119,7 +119,7 @@ function TailorForm({ onTailored }: { onTailored: () => void }) {
       setNotes(ai.notes);
       toast.success("Tailored from your facts");
     } else {
-      toast.message("Local tailor — no invention.");
+      toast.message("Local tailor applied. Nothing was added.");
     }
     setBusy(null);
   };
@@ -159,7 +159,7 @@ function TailorForm({ onTailored }: { onTailored: () => void }) {
         One posting. One version.
       </h1>
       <p className="mt-2 text-body text-soft">
-        {ASSIST_ENABLED ? "Instant local reorder, then an optional refine." : "Instant local reorder."}{" "}
+        {ASSIST_ENABLED ? "Instant local reorder and opener cleanup, then an optional refine." : "Instant local reorder and opener cleanup."}{" "}
         Missing requirements stay listed — never fabricated.
       </p>
       <div className="mt-6 flex flex-wrap gap-2">

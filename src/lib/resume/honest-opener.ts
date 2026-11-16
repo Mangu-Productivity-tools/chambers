@@ -144,7 +144,7 @@ const NOUN_LIKE = new Set(
    running sampling scaling scanning scheduling screening scripting selling serving setting
    shipping sorting sourcing spending staffing staging standing stocking styling tagging
    teaching testing tracking trading training tutoring underwriting upselling welding wiring
-   working writing`.split(/\s+/),
+   working writing leading founding winning getting`.split(/\s+/),
 );
 
 const HEAD_NOUNS = new Set(
@@ -158,15 +158,18 @@ const HEAD_NOUNS = new Set(
    policy procedures process processes program programs purposes requirements room rooms
    schedule schedules services sessions shift shifts site sites software specialist specialists
    staff standards strategies strategy supplies system systems tasks team teams tool tools
-   workshops`.split(/\s+/),
+   workshops security indicators management data analysis company companies quality`.split(/\s+/),
 );
 
 const LEAD_IN = String.raw`(?:i\s+)?(?:(?:was|am|were)\s+)?(?:also\s+)?`;
 const DUTY_OPENER = String.raw`(?:my\s+)?(?:(?:main|key|primary|daily|core)\s+)?(?:duties|responsibilities|tasks)\s+(?:included?|includes|were|are)\s*:?`;
-const FULL_OPENER = String.raw`responsible\s+for|worked\s+on|tasked\s+with|in\s+charge\s+of|charged\s+with|accountable\s+for|${DUTY_OPENER}`;
+// Only openers that state the work was the user's own are rewritten. "Tasked with",
+// "worked on", "in charge of", "charged with" and "accountable for" describe an
+// assignment or partial involvement, not an outcome, so they are kept as written.
+const FULL_OPENER = String.raw`responsible\s+for|${DUTY_OPENER}`;
 const HELP_OPENER = String.raw`helped\s+(?:with|in)`;
 /** Recognised as weak, but already honest verbs of limited scope: never rewritten. */
-const KEEP_OPENER = String.raw`assisted\s+(?:with|in)|involved\s+(?:with|in)|participated\s+in|contributed\s+to|exposure\s+to`;
+const KEEP_OPENER = String.raw`worked\s+on|tasked\s+with|in\s+charge\s+of|charged\s+with|accountable\s+for|assisted\s+(?:with|in)|involved\s+(?:with|in)|participated\s+in|contributed\s+to|exposure\s+to`;
 
 const FULL_RE = new RegExp(String.raw`^${LEAD_IN}(?:${FULL_OPENER})(?=[\s:]|$)\s*`, "i");
 const HELP_RE = new RegExp(String.raw`^${LEAD_IN}(?:${HELP_OPENER})(?=\s|$)\s*`, "i");
@@ -260,7 +263,14 @@ function chainProblem(chain: VerbChain, tail: string): OpenerOutcome | null {
   if (/^\s*(?:,|\/|&|and\b|or\b)/i.test(tail)) return "ambiguous";
   const next = (tail.match(/^\s+([A-Za-z]+)/)?.[1] ?? "").toLowerCase();
   // "building maintenance", "marketing campaigns", "meeting minutes".
-  if (chain.gerunds.some((g) => NOUN_LIKE.has(g.toLowerCase())) && HEAD_NOUNS.has(next)) {
+  if (HEAD_NOUNS.has(next)) return "ambiguous";
+  // "Managing Director relations": a capitalised word right after the -ing word
+  // suggests a title or name, not an object. Acronyms ("AWS") are fine.
+  const nextRaw = tail.match(/^\s+([A-Za-z]+)/)?.[1] ?? "";
+  if (/^[A-Z][a-z]/.test(nextRaw)) return "ambiguous";
+  // "... (target not met)", "(round failed)": the bullet says the outcome did not
+  // happen, so a bare past-tense verb would overstate it.
+  if (/\b(?:not|never|failed|lost|missed|unsuccessful|attempt(?:ed)?|cancell?ed|target)\b/i.test(tail)) {
     return "ambiguous";
   }
   // A later "... and presenting findings" would be left in the wrong tense, and

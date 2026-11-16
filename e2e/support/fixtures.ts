@@ -265,7 +265,7 @@ export async function runCoreLoop(page: Page, opts: LoopOptions = {}) {
     await page.getByLabel("Role").fill(POSTING.role);
     await page.getByLabel("Job description").fill(POSTING.text);
     await page.getByRole("button", { name: "Tailor this resume" }).click();
-    await expect.soft(page.getByText("Local tailor — no invention.")).toBeVisible();
+    await expect.soft(page.getByText("Local tailor applied. Nothing was added.")).toBeVisible();
     await expect.soft(page.getByText("Tailored from your facts")).toHaveCount(0);
     // Tailoring leaves a snapshot to compare against and to undo.
     await expect(page.getByRole("button", { name: "Undo" })).toBeVisible();

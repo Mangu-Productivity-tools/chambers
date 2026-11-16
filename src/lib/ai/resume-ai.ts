@@ -15,6 +15,10 @@ async function chat(opts: {
   user: string;
   maxTokens: number;
 }): Promise<Result<{ text: string }>> {
+  // Server-side kill switch: the client flag alone does not stop a direct POST.
+  if (process.env.VITE_ASSIST_ENABLED !== "true") {
+    return { ok: false, error: "AI assist is off" };
+  }
   const apiKey = process.env.XAI_API_KEY;
   if (!apiKey) {
     return { ok: false, error: "AI is not available in this environment" };
