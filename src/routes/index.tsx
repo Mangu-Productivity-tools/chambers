@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { BetaMark } from "@/components/brand/beta-mark";
 import { AppFooter, AppNav } from "@/components/layout/nav";
 import { PaperThumb } from "@/components/resume/paper-thumb";
 import { ResumeSheet } from "@/components/resume/sheet";
 import { Button } from "@/components/ui/button";
 import { DEMO_RESUME } from "@/lib/resume/sample";
+import { PRIVACY_LINE } from "@/lib/site/beta";
 import { TEMPLATES } from "@/lib/resume/templates";
 
 export const Route = createFileRoute("/")({
@@ -38,7 +40,10 @@ function Hero() {
     <section className="px-5 pb-20 pt-12 md:px-8 md:pb-28 md:pt-16">
       <div className="mx-auto grid max-w-page items-start gap-16 lg:grid-cols-[0.92fr_1.08fr]">
         <div>
-          <span className="kicker">Chambers · resume studio</span>
+          <div className="flex items-center gap-3">
+            <span className="kicker">Chambers · resume studio</span>
+            <BetaMark />
+          </div>
           <h1 className="font-serif mt-5 text-4xl font-medium leading-[1.08] tracking-[-0.03em] text-ink md:text-6xl">
             The resume that looks like you meant it.
           </h1>
@@ -56,7 +61,9 @@ function Hero() {
               <Link to="/studio">Open Studio</Link>
             </Button>
           </div>
-          <p className="mt-5 text-caption text-soft">Free on this device. No account. No watermark.</p>
+          <p className="mt-5 text-caption text-soft">
+            {PRIVACY_LINE} Free in beta. No account. No watermark.
+          </p>
         </div>
         <div className="relative overflow-hidden rounded-lg border border-hair bg-fog shadow-chambers">
           <div className="max-h-[min(72vh,640px)] overflow-hidden">
@@ -142,11 +149,11 @@ function Close() {
     <section className="cv-section border-t border-hair px-5 py-20 md:px-8">
       <div className="mx-auto max-w-page">
         <h2 className="font-serif max-w-xl text-3xl font-medium tracking-[-0.03em] md:text-4xl">
-          Private by default. Stored in this browser, not on a server.
+          {PRIVACY_LINE}
         </h2>
         <p className="mt-4 max-w-lg text-body leading-relaxed text-soft">
-          Instant ATS match against the posting you paste. Local tailor in a blink, then print when
-          the paper is honest.
+          ATS readiness check against the posting you paste. Tailoring runs in this browser — AI
+          assist is off in this beta. Print when the paper is honest.
         </p>
         <ul className="mt-6 flex flex-col gap-2 text-body text-soft">
           <li>No account. No watermark. No invented jobs.</li>

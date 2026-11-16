@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Field, Textarea } from "@/components/ui/input";
 import { useHydrated } from "@/hooks/use-hydrated";
 import { raceAi } from "@/lib/ai/timeout";
+import { ASSIST_ENABLED } from "@/lib/ai/assist-flag";
 import { rewriteBulletAi, writeSummaryAi } from "@/lib/ai/resume-ai";
 import { scoreAts, reportAsText } from "@/lib/resume/ats";
 import { localVariants } from "@/lib/resume/bullet-local";
@@ -35,8 +36,10 @@ function ToolsPage() {
           Instant checks. Honest rewrites.
         </h1>
         <p className="mt-4 max-w-2xl text-body text-soft">
-          ATS scoring is local and free. Rewrites use the assistant when it is available, and never
-          invent a new employer.
+          The ATS readiness check runs on this device.{" "}
+          {ASSIST_ENABLED
+            ? "Rewrites use the assistant when it is available, and never invent a new employer."
+            : "Rewrites are local in this beta — AI assist is off — and never invent a new employer."}
         </p>
         <div className="mt-12 grid gap-6 lg:grid-cols-2">
           <AtsCard />
@@ -109,7 +112,7 @@ function BulletCard() {
     setBusy(true);
     const fallback = localVariants(bullet);
     setVariants(fallback);
-    const ai = await raceAi(
+    const ai = !ASSIST_ENABLED ? null : await raceAi(
       rewriteBulletAi({
         data: {
           bullet,
@@ -194,7 +197,7 @@ function SummaryCard() {
     setBusy(true);
     const local = writeSummaryLocal(resume, jobDescription);
     patchResume({ summary: local });
-    const ai = await raceAi(writeSummaryAi({ data: { resume, jobDescription } }), 8000);
+    const ai = ASSIST_ENABLED ? await raceAi(writeSummaryAi({ data: { resume, jobDescription } }), 8000) : null;
     if (ai?.ok) {
       patchResume({ summary: ai.summary });
       toast.success("Summary updated on the sheet");

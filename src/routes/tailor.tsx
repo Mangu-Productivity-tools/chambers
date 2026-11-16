@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { useHydrated } from "@/hooks/use-hydrated";
 import { raceAi } from "@/lib/ai/timeout";
+import { ASSIST_ENABLED } from "@/lib/ai/assist-flag";
 import { tailorResumeAi, writeCoverLetterAi } from "@/lib/ai/resume-ai";
 import { writeLetterLocal } from "@/lib/resume/letter-local";
 import {
@@ -110,16 +111,15 @@ function TailorForm({ onTailored }: { onTailored: () => void }) {
     setNotes(local.notes);
     onTailored();
     setBusy("refine");
-    const ai = await raceAi(
-      tailorResumeAi({ data: { resume, jobDescription } }),
-      12000,
-    );
+    const ai = ASSIST_ENABLED
+      ? await raceAi(tailorResumeAi({ data: { resume, jobDescription } }), 12000)
+      : null;
     if (ai?.ok) {
       setResume(ai.resume);
       setNotes(ai.notes);
       toast.success("Tailored from your facts");
     } else {
-      toast.message("Local tailor — no invention.");
+      toast.message("Local tailor applied. Nothing was added.");
     }
     setBusy(null);
   };
@@ -132,7 +132,7 @@ function TailorForm({ onTailored }: { onTailored: () => void }) {
     const local = writeLetterLocal(resume, jobDescription, targetCompany, targetRole, letterTone);
     setLetter(local);
     setBusy("letter");
-    const ai = await raceAi(
+    const ai = !ASSIST_ENABLED ? null : await raceAi(
       writeCoverLetterAi({
         data: {
           resume,
@@ -159,8 +159,8 @@ function TailorForm({ onTailored }: { onTailored: () => void }) {
         One posting. One version.
       </h1>
       <p className="mt-2 text-body text-soft">
-        Instant local reorder, then an optional refine. Missing requirements stay listed — never
-        fabricated.
+        {ASSIST_ENABLED ? "Instant local reorder and opener cleanup, then an optional refine." : "Instant local reorder and opener cleanup."}{" "}
+        Missing requirements stay listed — never fabricated.
       </p>
       <div className="mt-6 flex flex-wrap gap-2">
         <Button
@@ -260,7 +260,7 @@ function TailorForm({ onTailored }: { onTailored: () => void }) {
           </Button>
         ) : null}
       </div>
-      {busy === "refine" ? (
+      {ASSIST_ENABLED && busy === "refine" ? (
         <p className="mt-3 text-caption text-soft">Sheet updated. Checking the assistant…</p>
       ) : null}
       <div className="mt-8 hairline rounded-lg bg-paper p-5">

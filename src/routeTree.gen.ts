@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as ExportRouteImport } from './routes/export'
 import { Route as LetterRouteImport } from './routes/letter'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as StartRouteImport } from './routes/start'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as TailorRouteImport } from './routes/tailor'
@@ -38,6 +40,16 @@ const ExportRoute = ExportRouteImport.update({
 const LetterRoute = LetterRouteImport.update({
   id: '/letter',
   path: '/letter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StartRoute = StartRouteImport.update({
@@ -76,6 +88,8 @@ export interface FileRoutesByFullPath {
   '/$': typeof SplatRoute
   '/export': typeof ExportRoute
   '/letter': typeof LetterRoute
+  '/privacy': typeof PrivacyRoute
+  '/settings': typeof SettingsRoute
   '/start': typeof StartRoute
   '/studio': typeof StudioRoute
   '/tailor': typeof TailorRoute
@@ -88,6 +102,8 @@ export interface FileRoutesByTo {
   '/$': typeof SplatRoute
   '/export': typeof ExportRoute
   '/letter': typeof LetterRoute
+  '/privacy': typeof PrivacyRoute
+  '/settings': typeof SettingsRoute
   '/start': typeof StartRoute
   '/studio': typeof StudioRoute
   '/tailor': typeof TailorRoute
@@ -101,6 +117,8 @@ export interface FileRoutesById {
   '/$': typeof SplatRoute
   '/export': typeof ExportRoute
   '/letter': typeof LetterRoute
+  '/privacy': typeof PrivacyRoute
+  '/settings': typeof SettingsRoute
   '/start': typeof StartRoute
   '/studio': typeof StudioRoute
   '/tailor': typeof TailorRoute
@@ -115,6 +133,8 @@ export interface FileRouteTypes {
     | '/$'
     | '/export'
     | '/letter'
+    | '/privacy'
+    | '/settings'
     | '/start'
     | '/studio'
     | '/tailor'
@@ -127,6 +147,8 @@ export interface FileRouteTypes {
     | '/$'
     | '/export'
     | '/letter'
+    | '/privacy'
+    | '/settings'
     | '/start'
     | '/studio'
     | '/tailor'
@@ -139,6 +161,8 @@ export interface FileRouteTypes {
     | '/$'
     | '/export'
     | '/letter'
+    | '/privacy'
+    | '/settings'
     | '/start'
     | '/studio'
     | '/tailor'
@@ -152,6 +176,8 @@ export interface RootRouteChildren {
   SplatRoute: typeof SplatRoute
   ExportRoute: typeof ExportRoute
   LetterRoute: typeof LetterRoute
+  PrivacyRoute: typeof PrivacyRoute
+  SettingsRoute: typeof SettingsRoute
   StartRoute: typeof StartRoute
   StudioRoute: typeof StudioRoute
   TailorRoute: typeof TailorRoute
@@ -188,6 +214,20 @@ declare module '@tanstack/react-router' {
       path: '/letter'
       fullPath: '/letter'
       preLoaderRoute: typeof LetterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/start': {
@@ -240,6 +280,8 @@ const rootRouteChildren: RootRouteChildren = {
   SplatRoute: SplatRoute,
   ExportRoute: ExportRoute,
   LetterRoute: LetterRoute,
+  PrivacyRoute: PrivacyRoute,
+  SettingsRoute: SettingsRoute,
   StartRoute: StartRoute,
   StudioRoute: StudioRoute,
   TailorRoute: TailorRoute,

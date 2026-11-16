@@ -45,7 +45,7 @@ export interface P2PRoomOptions {
   room: string;
   selfId: string;
   name?: string;
-  /** Defaults to VITE_STUN_URLS (comma-separated) or Google public STUN. */
+  /** Defaults to public STUN (Google + Cloudflare); pass your own to override. */
   iceServers?: RTCIceServer[];
   onPeersChanged?: (peers: PeerInfo[]) => void;
   /** Fires for both the unreliable "state" and reliable "reliable" channels. */
@@ -82,15 +82,11 @@ const MAX_RECOVERY_ATTEMPTS = 3;
 const SIGNAL_RETRY_DELAYS_MS = [250, 750];
 
 export function defaultIceServers(): RTCIceServer[] {
-  const urls = (import.meta.env.VITE_STUN_URLS as string | undefined)
-    ?.split(",")
-    .map((u) => u.trim())
-    .filter(Boolean);
   // Two independent providers: ICE queries all of them in parallel during
   // gathering, so either one being unreachable costs nothing.
   return [
     {
-      urls: urls?.length ? urls : ["stun:stun.l.google.com:19302", "stun:stun.cloudflare.com:3478"],
+      urls: ["stun:stun.l.google.com:19302", "stun:stun.cloudflare.com:3478"],
     },
   ];
 }

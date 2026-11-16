@@ -1,3 +1,5 @@
+> **Historical, superseded by Spec Rev 6.** Kept for the record only. Do not treat anything below as current strategy, pricing, or product scope.
+
 # Chambers prosperity
 
 Chambers makes other Mangu products look expensive. Weak standalone cash.
