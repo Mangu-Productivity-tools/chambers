@@ -10,7 +10,7 @@
 | `src/styles.css` | Tokens + print |
 | `tokens/` | Canonical CSS / JSON / Tailwind preset |
 | `design/drops/` | Zero-JS HTML drops |
-| `design/migration-mockups/` | Original five-screen deck |
+| `archive/migration-mockups/` | Archived, unrelated historical deck (audiobook mockups) |
 
 ## Still the house language
 
