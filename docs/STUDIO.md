@@ -27,7 +27,7 @@ Zustand + `localStorage` key `chambers-studio`. Debounced 400ms on typing. Struc
 
 ## AI
 
-`src/lib/ai/resume-ai.ts` is a stub that returns “not available.” Every caller already falls back to:
+Not shipped. `src/lib/ai/resume-ai.ts` holds server functions that call xAI (`grok-4.5`) when `XAI_API_KEY` is set, but every call site is gated by `VITE_ASSIST_ENABLED` (`src/lib/ai/assist-flag.ts`), which is off by default and unset in production. With the flag off, only the local paths run:
 
 - `parseResumeText`
 - `tailorLocal`
@@ -35,4 +35,4 @@ Zustand + `localStorage` key `chambers-studio`. Debounced 400ms on typing. Struc
 - `writeSummaryLocal`
 - `localVariants`
 
-To wire grok-4.5, put a **server** proxy in front of `https://api.x.ai/v1/chat/completions`. Do not ship an `XAI_API_KEY` in a `VITE_` variable.
+Do not enable the flag before the Band C Assist engine ships. Never put an API key in a `VITE_` variable.

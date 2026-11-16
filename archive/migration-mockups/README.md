@@ -1,5 +1,7 @@
 # Chambers — Migration Mockups (Revamp 01)
 
+> **Archived.** This is an unrelated historical deck (audiobook-studio mockups from August 2026). It does not describe the Chambers resume product and nothing in it is a product claim. Moved from `design/migration-mockups/` in v26 (FR-MKT-107).
+
 High-fidelity, self-contained HTML mockups translating the five reference
 screens in `Migration_Planning.docx` (screenshots of an AI resume builder)
 into **Chambers' own product and brand**.
