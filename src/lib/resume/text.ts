@@ -20,7 +20,9 @@ export function tokenize(text: string): string[] {
     .toLowerCase()
     .replace(/[^a-z0-9+.#/\s-]/g, " ")
     .split(/[\s,/|;]+/)
-    .map((w) => w.trim())
+    // Sentence punctuation is not part of a term: "kubernetes." -> "kubernetes".
+    // Leading "." (".net") and trailing "+", "#" ("c++", "c#") are kept.
+    .map((w) => w.trim().replace(/^-+|[.-]+$/g, ""))
     .filter((w) => w.length > 1 && !STOP.has(w));
 }
 
@@ -107,6 +109,41 @@ function extractPhrases(text: string): string[] {
     .map(([p]) => p);
 
   return [...hinted, ...titled.slice(0, 12), ...repeated.slice(0, 8)];
+}
+
+/**
+ * True when `term` appears in `hay` as a whole word or phrase, not as a
+ * fragment of a longer word. "java" is not evidenced by "javascript", and
+ * "react" is not evidenced by "reactive". A plural/singular "s" is tolerated
+ * ("dashboard" ~ "dashboards"). Used wherever local output claims that a
+ * posting term is already in the user's resume.
+ */
+export function evidencedIn(hay: string, term: string): boolean {
+  return findEvidence(hay, term) !== null;
+}
+
+/** The matching text as the user wrote it (their casing), or null. */
+export function findEvidence(hay: string, term: string): string | null {
+  const t = term.trim().toLowerCase();
+  if (!t) return null;
+  const lower = hay.toLowerCase();
+  const variants = t.length > 3 && t.endsWith("s") ? [t, t.slice(0, -1)] : [t, `${t}s`];
+  const wordChar = /[a-z0-9]/;
+  for (const v of variants) {
+    let from = 0;
+    for (;;) {
+      const i = lower.indexOf(v, from);
+      if (i < 0) break;
+      const before = i > 0 ? lower[i - 1] : " ";
+      const after = i + v.length < lower.length ? lower[i + v.length] : " ";
+      // "+" and "#" extend a term on the right: "c" is not evidenced by "c++" or "c#".
+      if (!wordChar.test(before) && !wordChar.test(after) && !/[+#]/.test(after)) {
+        return hay.slice(i, i + v.length);
+      }
+      from = i + 1;
+    }
+  }
+  return null;
 }
 
 export function resumePlainText(parts: {
