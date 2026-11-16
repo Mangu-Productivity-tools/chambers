@@ -21,6 +21,9 @@
     "check:auth": "node scripts/check-auth-invariant.mjs",
     "test": "node --test 'scripts/**/*.test.mjs' && node --experimental-strip-types --test src/lib/app-data/app-data.test.ts src/lib/app-data/readiness-schedule.test.ts src/lib/auth/gate-identity.test.ts src/lib/auth/sign-in-gate.test.ts && node --experimental-strip-types --import ./scripts/ts-bare-specifiers.mjs --test src/lib/resume/resume.test.ts",
     "test:resume": "node --experimental-strip-types --import ./scripts/ts-bare-specifiers.mjs --test src/lib/resume/resume.test.ts",
+    "e2e": "playwright test -c e2e/playwright.config.ts",
+    "e2e:smoke": "playwright test -c e2e/playwright.config.ts routes.smoke",
+    "e2e:report": "playwright show-report e2e/playwright-report",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

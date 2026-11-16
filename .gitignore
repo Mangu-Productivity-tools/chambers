@@ -19,3 +19,7 @@ tmp
 .node_modules.lock
 .grok/*
 !.grok/app-env.json
+
+# Playwright e2e output
+e2e/test-results
+e2e/playwright-report
